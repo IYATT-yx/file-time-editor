@@ -6,6 +6,7 @@ import tkinter as tk
 from tkinter import filedialog
 import os
 import sys
+import datetime
 
 class MainUI(tk.Frame):
     def __init__(self, master: tk.Tk):
@@ -17,21 +18,21 @@ class MainUI(tk.Frame):
         """
         根据创建时间的年月调整天数的上限
         """
-        days = CommonTools.getDaysOfMonth(self.createYearSpinbox.get(), self.createMonthSpinbox.get())
+        days = CommonTools.getDaysOfMonth(self.createYearVar.get(), self.createMonthVar.get())
         self.createDaySpinbox.config(to=days)
 
     def updateModifyDays(self):
         """
         跟据修改时间的年月调整天数的上限
         """
-        days = CommonTools.getDaysOfMonth(self.modifyYearSpinbox.get(), self.modifyMonthSpinbox.get())
+        days = CommonTools.getDaysOfMonth(self.modifyYearVar.get(), self.modifyMonthVar.get())
         self.modifyDaySpinbox.config(to=days)
 
     def updateAccessDays(self):
         """
         根据访问时间的年月调整天数的上限
         """
-        days = CommonTools.getDaysOfMonth(self.accessYearSpinbox.get(), self.accessMonthSpinbox.get())
+        days = CommonTools.getDaysOfMonth(self.accessYearVar.get(), self.accessMonthVar.get())
         self.accessDaySpinbox.config(to=days)
 
     def initUI(self):
@@ -60,59 +61,80 @@ class MainUI(tk.Frame):
         microsecondWidth = 7
 
         # 创建时间
-        self.createYearSpinbox = tk.Spinbox(self, from_=1980, to=2099, increment=1, width=yearWidth, command=self.updateCreateDays)
-        self.createYearSpinbox.grid(row=2, column=1)
-        self.createMonthSpinbox = tk.Spinbox(self, from_=1, to=12, increment=1, width=monthWidth, command=self.updateCreateDays)
-        self.createMonthSpinbox.grid(row=2, column=2)
-        self.createDaySpinbox = tk.Spinbox(self, from_=1, to=31, increment=1, width=dayWidth)
+        self.createYearVar = tk.IntVar()
+        self.createMonthVar = tk.IntVar()
+        self.createDayVar = tk.IntVar()
+        self.createHourVar = tk.IntVar()
+        self.createMinuteVar = tk.IntVar()
+        self.createSecondVar = tk.IntVar()
+        self.createMicrosecondVar = tk.IntVar()
+        tk.Spinbox(self, from_=1980, to=2099, increment=1, textvariable=self.createYearVar, width=yearWidth, command=self.updateCreateDays) \
+        .grid(row=2, column=1)
+        tk.Spinbox(self, from_=1, to=12, increment=1, textvariable=self.createMonthVar, width=monthWidth, command=self.updateCreateDays) \
+        .grid(row=2, column=2)
+        self.createDaySpinbox = tk.Spinbox(self, from_=1, to=31, increment=1, textvariable=self.createDayVar, width=dayWidth, command=self.updateCreateDays)
         self.createDaySpinbox.grid(row=2, column=3)
-        self.createHourSpinbox = tk.Spinbox(self, from_=0, to=23, increment=1, width=hourWidth)
-        self.createHourSpinbox.grid(row=2, column=4)
-        self.createMinuteSpinbox = tk.Spinbox(self, from_=0, to=59, increment=1, width=minuteWidth)
-        self.createMinuteSpinbox.grid(row=2, column=5)
-        self.createSecondSpinbox = tk.Spinbox(self, from_=0, to=59, increment=1, width=secondWidth)
-        self.createSecondSpinbox.grid(row=2, column=6)
-        self.createMicrosecondSpinbox = tk.Spinbox(self, from_=0, to=999, increment=1, width=microsecondWidth)
-        self.createMicrosecondSpinbox.grid(row=2, column=7)
+        tk.Spinbox(self, from_=0, to=23, increment=1, textvariable=self.createHourVar, width=hourWidth) \
+        .grid(row=2, column=4)
+        tk.Spinbox(self, from_=0, to=59, increment=1, textvariable=self.createMinuteVar, width=minuteWidth) \
+        .grid(row=2, column=5)
+        tk.Spinbox(self, from_=0, to=59, increment=1, textvariable=self.createSecondVar, width=secondWidth) \
+        .grid(row=2, column=6)
+        tk.Spinbox(self, from_=0, to=999999, increment=1, textvariable=self.createMicrosecondVar, width=microsecondWidth) \
+        .grid(row=2, column=7)
 
         # 修改时间
-        self.modifyYearSpinbox = tk.Spinbox(self, from_=1980, to=2099, increment=1, width=yearWidth, command=self.updateModifyDays)
-        self.modifyYearSpinbox.grid(row=3, column=1)
-        self.modifyMonthSpinbox = tk.Spinbox(self, from_=1, to=12, increment=1, width=monthWidth, command=self.updateModifyDays)
-        self.modifyMonthSpinbox.grid(row=3, column=2)
-        self.modifyDaySpinbox = tk.Spinbox(self, from_=1, to=31, increment=1, width=dayWidth)
+        self.modifyYearVar = tk.IntVar()
+        self.modifyMonthVar = tk.IntVar()
+        self.modifyDayVar = tk.IntVar()
+        self.modifyHourVar = tk.IntVar()
+        self.modifyMinuteVar = tk.IntVar()
+        self.modifySecondVar = tk.IntVar()
+        self.modifyMicrosecondVar = tk.IntVar()
+        tk.Spinbox(self, from_=1980, to=2099, increment=1, textvariable=self.modifyYearVar, width=yearWidth, command=self.updateModifyDays) \
+        .grid(row=3, column=1)
+        tk.Spinbox(self, from_=1, to=12, increment=1, textvariable=self.modifyMonthVar, width=monthWidth, command=self.updateModifyDays) \
+        .grid(row=3, column=2)
+        self.modifyDaySpinbox = tk.Spinbox(self, from_=1, to=31, increment=1, textvariable=self.modifyDayVar, width=dayWidth, command=self.updateModifyDays)
         self.modifyDaySpinbox.grid(row=3, column=3)
-        self.modifyHourSpinbox = tk.Spinbox(self, from_=0, to=23, increment=1, width=hourWidth)
-        self.modifyHourSpinbox.grid(row=3, column=4)
-        self.modifyMinuteSpinbox = tk.Spinbox(self, from_=0, to=59, increment=1, width=minuteWidth)
-        self.modifyMinuteSpinbox.grid(row=3, column=5)
-        self.modifySecondSpinbox = tk.Spinbox(self, from_=0, to=59, increment=1, width=secondWidth)
-        self.modifySecondSpinbox.grid(row=3, column=6)
-        self.modifyMicrosecondSpinbox = tk.Spinbox(self, from_=0, to=999, increment=1, width=microsecondWidth)
-        self.modifyMicrosecondSpinbox.grid(row=3, column=7)
+        tk.Spinbox(self, from_=0, to=23, increment=1, textvariable=self.modifyHourVar, width=hourWidth) \
+        .grid(row=3, column=4)
+        tk.Spinbox(self, from_=0, to=59, increment=1, textvariable=self.modifyMinuteVar, width=minuteWidth) \
+        .grid(row=3, column=5)
+        tk.Spinbox(self, from_=0, to=59, increment=1, textvariable=self.modifySecondVar, width=secondWidth) \
+        .grid(row=3, column=6)
+        tk.Spinbox(self, from_=0, to=999999, increment=1, textvariable=self.modifyMicrosecondVar, width=microsecondWidth) \
+        .grid(row=3, column=7)
 
         # 访问时间
-        self.accessYearSpinbox = tk.Spinbox(self, from_=1980, to=2099, increment=1, width=yearWidth, command=self.updateAccessDays)
-        self.accessYearSpinbox.grid(row=4, column=1)
-        self.accessMonthSpinbox = tk.Spinbox(self, from_=1, to=12, increment=1, width=monthWidth, command=self.updateAccessDays)
-        self.accessMonthSpinbox.grid(row=4, column=2)
-        self.accessDaySpinbox = tk.Spinbox(self, from_=1, to=31, increment=1, width=dayWidth)
+        self.accessYearVar = tk.IntVar()
+        self.accessMonthVar = tk.IntVar()
+        self.accessDayVar = tk.IntVar()
+        self.accessHourVar = tk.IntVar()
+        self.accessMinuteVar = tk.IntVar()
+        self.accessSecondVar = tk.IntVar()
+        self.accessMicrosecondVar = tk.IntVar()
+        tk.Spinbox(self, from_=1980, to=2099, increment=1, textvariable=self.accessYearVar, width=yearWidth, command=self.updateAccessDays) \
+        .grid(row=4, column=1)
+        tk.Spinbox(self, from_=1, to=12, increment=1, textvariable=self.accessMonthVar, width=monthWidth, command=self.updateAccessDays) \
+        .grid(row=4, column=2)
+        self.accessDaySpinbox = tk.Spinbox(self, from_=1, to=31, increment=1, textvariable=self.accessDayVar, width=dayWidth, command=self.updateAccessDays)
         self.accessDaySpinbox.grid(row=4, column=3)
-        self.accessHourSpinbox = tk.Spinbox(self, from_=0, to=23, increment=1, width=hourWidth)
-        self.accessHourSpinbox.grid(row=4, column=4)
-        self.accessMinuteSpinbox = tk.Spinbox(self, from_=0, to=59, increment=1, width=minuteWidth)
-        self.accessMinuteSpinbox.grid(row=4, column=5)
-        self.accessSecondSpinbox = tk.Spinbox(self, from_=0, to=59, increment=1, width=secondWidth)
-        self.accessSecondSpinbox.grid(row=4, column=6)
-        self.accessMicrosecondSpinbox = tk.Spinbox(self, from_=0, to=999, increment=1, width=microsecondWidth)
-        self.accessMicrosecondSpinbox.grid(row=4, column=7)
+        tk.Spinbox(self, from_=0, to=23, increment=1, textvariable=self.accessHourVar, width=hourWidth) \
+        .grid(row=4, column=4)
+        tk.Spinbox(self, from_=0, to=59, increment=1, textvariable=self.accessMinuteVar, width=minuteWidth) \
+        .grid(row=4, column=5)
+        tk.Spinbox(self, from_=0, to=59, increment=1, textvariable=self.accessSecondVar, width=secondWidth) \
+        .grid(row=4, column=6)
+        tk.Spinbox(self, from_=0, to=999999, increment=1, textvariable=self.accessMicrosecondVar, width=microsecondWidth) \
+        .grid(row=4, column=7)
 
         tk.Button(self, text='打开文件', command=self.onOpenFile).grid(row=0, column=8)
         tk.Button(self, text='修改时间', command=self.onModifyTime).grid(row=2, column=8, rowspan=3, sticky=tk.NSEW)
 
         tk.Label(self, text=f'IYATT-yx iyatt@iyatt.com 版本：{buildTime}').grid(row=5, column=0, columnspan=10, sticky=tk.W)
 
-    def updateTimeSpinbox(self, spinboxObj: tk.Spinbox, value):
+    def updateTimeSpinbox(self, valueObj: tk.IntVar, value):
         """
         更新时间控件值
 
@@ -120,46 +142,53 @@ class MainUI(tk.Frame):
             spinboxObj (tk.Spinbox): 时间控件
             value (int): 时间值
         """
-        spinboxObj.delete(0, tk.END)
-        spinboxObj.insert(0, value)
+        valueObj.set(value)
 
-    def showTime(self, timeDict: dict):
-        createTimeDict = timeDict[TimeModule.CREATE]
-        modifyTimeDict = timeDict[TimeModule.MODIFY]
-        accessTimeDict = timeDict[TimeModule.ACCESS]
+    def showTime(self, timeDict: dict[str, datetime.datetime]):
+        """
+        实现时间
+
+        Args:
+            timeDict (dict[str, datetime.datetime]): 时间字典：创建、修改、访问
+        """
+        createDt = timeDict[TimeModule.CREATE]
+        modifyDt = timeDict[TimeModule.MODIFY]
+        accessDt = timeDict[TimeModule.ACCESS]
         
-        self.updateTimeSpinbox(self.createYearSpinbox, createTimeDict[TimeModule.YEAR])
-        self.updateTimeSpinbox(self.createMonthSpinbox, createTimeDict[TimeModule.MONTH])
-        self.updateTimeSpinbox(self.createDaySpinbox, createTimeDict[TimeModule.DAY])
-        self.updateTimeSpinbox(self.createHourSpinbox, createTimeDict[TimeModule.HOUR])
-        self.updateTimeSpinbox(self.createMinuteSpinbox, createTimeDict[TimeModule.MINUTE])
-        self.updateTimeSpinbox(self.createSecondSpinbox, createTimeDict[TimeModule.SECOND])
-        self.updateTimeSpinbox(self.createMicrosecondSpinbox, createTimeDict[TimeModule.MICROSECOND])
+        self.updateTimeSpinbox(self.createYearVar, createDt.year)
+        self.updateTimeSpinbox(self.createMonthVar, createDt.month)
+        self.updateTimeSpinbox(self.createDayVar, createDt.day)
+        self.updateTimeSpinbox(self.createHourVar, createDt.hour)
+        self.updateTimeSpinbox(self.createMinuteVar, createDt.minute)
+        self.updateTimeSpinbox(self.createSecondVar, createDt.second)
+        self.updateTimeSpinbox(self.createMicrosecondVar, createDt.microsecond)
 
-        self.updateTimeSpinbox(self.modifyYearSpinbox, modifyTimeDict[TimeModule.YEAR])
-        self.updateTimeSpinbox(self.modifyMonthSpinbox, modifyTimeDict[TimeModule.MONTH])
-        self.updateTimeSpinbox(self.modifyDaySpinbox, modifyTimeDict[TimeModule.DAY])
-        self.updateTimeSpinbox(self.modifyHourSpinbox, modifyTimeDict[TimeModule.HOUR])
-        self.updateTimeSpinbox(self.modifyMinuteSpinbox, modifyTimeDict[TimeModule.MINUTE])
-        self.updateTimeSpinbox(self.modifySecondSpinbox, modifyTimeDict[TimeModule.SECOND])
-        self.updateTimeSpinbox(self.modifyMicrosecondSpinbox, modifyTimeDict[TimeModule.MICROSECOND])
+        self.updateTimeSpinbox(self.modifyYearVar, modifyDt.year)
+        self.updateTimeSpinbox(self.modifyMonthVar, modifyDt.month)
+        self.updateTimeSpinbox(self.modifyDayVar, modifyDt.day)
+        self.updateTimeSpinbox(self.modifyHourVar, modifyDt.hour)
+        self.updateTimeSpinbox(self.modifyMinuteVar, modifyDt.minute)
+        self.updateTimeSpinbox(self.modifySecondVar, modifyDt.second)
+        self.updateTimeSpinbox(self.modifyMicrosecondVar, modifyDt.microsecond)
 
-        self.updateTimeSpinbox(self.accessYearSpinbox, accessTimeDict[TimeModule.YEAR])
-        self.updateTimeSpinbox(self.accessMonthSpinbox, accessTimeDict[TimeModule.MONTH])
-        self.updateTimeSpinbox(self.accessDaySpinbox, accessTimeDict[TimeModule.DAY])
-        self.updateTimeSpinbox(self.accessHourSpinbox, accessTimeDict[TimeModule.HOUR])
-        self.updateTimeSpinbox(self.accessMinuteSpinbox, accessTimeDict[TimeModule.MINUTE])
-        self.updateTimeSpinbox(self.accessSecondSpinbox, accessTimeDict[TimeModule.SECOND])
-        self.updateTimeSpinbox(self.accessMicrosecondSpinbox, accessTimeDict[TimeModule.MICROSECOND])
+        self.updateTimeSpinbox(self.accessYearVar, accessDt.year)
+        self.updateTimeSpinbox(self.accessMonthVar, accessDt.month)
+        self.updateTimeSpinbox(self.accessDayVar, accessDt.day)
+        self.updateTimeSpinbox(self.accessHourVar, accessDt.hour)
+        self.updateTimeSpinbox(self.accessMinuteVar, accessDt.minute)
+        self.updateTimeSpinbox(self.accessSecondVar, accessDt.second)
+        self.updateTimeSpinbox(self.accessMicrosecondVar, accessDt.microsecond)
 
     def onOpenFile(self):
         """
         打开文件
         """
-        file = os.path.normpath(filedialog.askopenfilename(initialdir=os.path.dirname(sys.argv[0])))
+        filepath = os.path.normpath(filedialog.askopenfilename(initialdir=os.path.dirname(sys.argv[0])))
+        if filepath == '.': # 点击了取消
+            return
         self.filepathEntry.delete(0, tk.END)
-        self.filepathEntry.insert(0, file)
-        timeDict = TimeModule.getFileTime(file)
+        self.filepathEntry.insert(0, filepath)
+        timeDict = TimeModule.getFileTime(self.filepathEntry.get())
         self.showTime(timeDict)        
 
     def onModifyTime(self):
@@ -167,32 +196,36 @@ class MainUI(tk.Frame):
         修改时间
         """
         filepath = os.path.normpath(self.filepathEntry.get())
-        createTimeDict = {
-            TimeModule.YEAR: int(self.createYearSpinbox.get()),
-            TimeModule.MONTH: int(self.createMonthSpinbox.get()),
-            TimeModule.DAY: int(self.createDaySpinbox.get()),
-            TimeModule.HOUR: int(self.createHourSpinbox.get()),
-            TimeModule.MINUTE: int(self.createMinuteSpinbox.get()),
-            TimeModule.SECOND: int(self.createSecondSpinbox.get()),
-            TimeModule.MICROSECOND: int(self.createMicrosecondSpinbox.get())
-        }
-        modifyTimeDict = {
-            TimeModule.YEAR: int(self.modifyYearSpinbox.get()),
-            TimeModule.MONTH: int(self.modifyMonthSpinbox.get()),
-            TimeModule.DAY: int(self.modifyDaySpinbox.get()),
-            TimeModule.HOUR: int(self.modifyHourSpinbox.get()),
-            TimeModule.MINUTE: int(self.modifyMinuteSpinbox.get()),
-            TimeModule.SECOND: int(self.modifySecondSpinbox.get()),
-            TimeModule.MICROSECOND: int(self.modifyMicrosecondSpinbox.get())
-        }
-        accessTimeDict = {
-            TimeModule.YEAR: int(self.accessYearSpinbox.get()),
-            TimeModule.MONTH: int(self.accessMonthSpinbox.get()),
-            TimeModule.DAY: int(self.accessDaySpinbox.get()),
-            TimeModule.HOUR: int(self.accessHourSpinbox.get()),
-            TimeModule.MINUTE: int(self.accessMinuteSpinbox.get()),
-            TimeModule.SECOND: int(self.accessSecondSpinbox.get()),
-            TimeModule.MICROSECOND: int(self.accessMicrosecondSpinbox.get())
-        }
-        timeDict = {TimeModule.CREATE: createTimeDict, TimeModule.MODIFY: modifyTimeDict, TimeModule.ACCESS: accessTimeDict}
+        createDt = datetime.datetime(
+            self.createYearVar.get(),
+            self.createMonthVar.get(),
+            self.createDayVar.get(),
+            self.createHourVar.get(),
+            self.createMinuteVar.get(),
+            self.createSecondVar.get(),
+            self.createMicrosecondVar.get()
+        )
+        modifyDt = datetime.datetime(
+            self.modifyYearVar.get(),
+            self.modifyMonthVar.get(),
+            self.modifyDayVar.get(),
+            self.modifyHourVar.get(),
+            self.modifyMinuteVar.get(),
+            self.modifySecondVar.get(),
+            self.modifyMicrosecondVar.get()
+        )
+        accessDt = datetime.datetime(
+            self.accessYearVar.get(),
+            self.accessMonthVar.get(),
+            self.accessDayVar.get(),
+            self.accessHourVar.get(),
+            self.accessMinuteVar.get(),
+            self.accessSecondVar.get(),
+            self.accessMicrosecondVar.get()
+        )
+
+        timeDict = {TimeModule.CREATE: createDt, TimeModule.MODIFY: modifyDt, TimeModule.ACCESS: accessDt}
         TimeModule.modifyTime(filepath, timeDict)
+        
+        timeDict = TimeModule.getFileTime(filepath)
+        self.showTime(timeDict)  
