@@ -183,7 +183,7 @@ class MainUI(tk.Frame):
         """
         打开文件
         """
-        filepath = os.path.normpath(filedialog.askopenfilename(initialdir=os.path.dirname(sys.argv[0])))
+        filepath = os.path.normpath(filedialog.askopenfilename())
         if filepath == '.': # 点击了取消
             return
         self.filepathEntry.delete(0, tk.END)
