@@ -6,9 +6,9 @@
 
 ## 测试环境
 
-* Windows 11 24H2
+* Windows 11（至少要 Windows 10）
 * NTFS 文件系统
-* Python 3.13.1（支持 Windows 7 以上，不包含 Windows 7）
+* Python 3.14.5
 
 ## 已知问题
 
